@@ -22,13 +22,10 @@ export const addRecipe = createAsyncThunk('recipes/add',
         try {
             console.log('in async thunk');
             const response = await axios.post('http://localhost:3000/api/recipes',
-                {
-                    title: recipe.title,
-                    description: "new recipe with id " + recipe.id
-                },
+                recipe,
                 {
                     headers: {
-                        'user-id': 1738080270829
+                        'user-id': recipe.authorId
                     }
                 }
             )
@@ -47,7 +44,7 @@ const recipesSlice = createSlice({
         loading: true
     },
     reducers: {
-       
+
     },
     extraReducers: (builder) => {
         builder
@@ -73,7 +70,7 @@ const recipesSlice = createSlice({
                 }
             )
     }
-   
+
 });
 
 export default recipesSlice;
