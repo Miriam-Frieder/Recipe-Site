@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { Recipe } from "./Types";
-import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, IconButton, Typography, List, ListItem, ListItemIcon } from "@mui/material";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import {  Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, IconButton, Typography, List, ListItem, ListItemIcon } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { red } from '@mui/material/colors';
 import CheckIcon from '@mui/icons-material/Check'; 
 import img from '../img/recipe.jpg'
 
@@ -18,19 +16,7 @@ const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
 
     return (
         <Card sx={{ maxWidth: 345, margin: 2 }}>
-            <CardHeader
-                avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                        A
-                    </Avatar>
-                }
-                action={
-                    <IconButton aria-label="settings">
-                        <MoreVertIcon />
-                    </IconButton>
-                }
-                title={recipe.title}
-            />
+            <CardHeader title={recipe.title}/>
             <CardMedia
                 component="img"
                 height="194"

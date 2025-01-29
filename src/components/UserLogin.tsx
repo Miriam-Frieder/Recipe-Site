@@ -5,7 +5,6 @@ import UserContext from "./UserContext";
 import { emptyUser } from "./UserContext";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
-
 const Login = ({ open,isRegister, close }: { open: boolean,isRegister:boolean, close: Function }) => {
   const { userDispatch } = useContext(UserContext);
   const [userData, setUserData] = useState<User>(emptyUser);
@@ -49,7 +48,6 @@ const Login = ({ open,isRegister, close }: { open: boolean,isRegister:boolean, c
         alert('Something went wrong. Please try again later.');
       }
     };
-  
 
   return (
     <Modal

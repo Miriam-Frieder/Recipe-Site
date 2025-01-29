@@ -1,17 +1,22 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootStore } from "../store/store";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { fetchRecipes } from "../store/recipesSlice";
-import { Button, Box, List, ListItem, Typography } from "@mui/material";
+import { Button, Box, List, Typography, ListItemButton, CircularProgress } from "@mui/material";
 import RecipeForm from "./RecipeForm";
 import RecipeCard from "./RecipeCard";
-import { Recipe } from "./Types"; 
+import { Recipe } from "./Types";
+import UserContext from "./UserContext";
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+
 
 const RecipeList = () => {
     const recipesList = useSelector((store: RootStore) => store.list);
+    const isLoading = useSelector((store: RootStore) => store.loading);
     const dispatch = useDispatch<AppDispatch>();
     const [addRecipe, setAddRecipe] = useState(false);
     const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+    const { user } = useContext(UserContext);
 
     useEffect(() => {
         dispatch(fetchRecipes());
@@ -30,29 +35,33 @@ const RecipeList = () => {
     };
 
     return (
-        <Box display="flex">
-            <Box flex={1} padding={2}>
-                <Typography variant="h4">Recipes</Typography>
-                <List>
-                    {recipesList.map(r => (
-                        <ListItem 
-                            key={r.id} 
-                            onClick={() => handleTitleClick(r)} 
-                            component="div" // Specify the component prop
-                        >
-                            {r.title}
-                        </ListItem>
-                    ))}
-                </List>
-                <Button onClick={handleOpen} variant="contained" color="primary">
-                    Add Recipe
-                </Button>
-                <RecipeForm open={addRecipe} close={handleClose} />
+        <>
+            {isLoading&&<CircularProgress />}
+            <Box display="flex">
+                <Box flex={1} padding={2}>
+                    <Typography variant="h4">Recipes</Typography>
+                    <List>
+                        {recipesList.map(r => (
+                            <ListItemButton
+                                key={r.id}
+                                onClick={() => handleTitleClick(r)}
+                                component="a"
+                            >
+                                <ReceiptLongIcon sx={{ margin: 0.5 }} />
+                                {r.title}
+                            </ListItemButton>
+                        ))}
+                    </List>
+                    <Button onClick={handleOpen} variant="contained" color="primary" disabled={!user.id}>
+                        Add Recipe
+                    </Button>
+                    <RecipeForm open={addRecipe} close={handleClose} />
+                </Box>
+                <Box flex={2} padding={2}>
+                    {selectedRecipe && <RecipeCard recipe={selectedRecipe} />}
+                </Box>
             </Box>
-            <Box flex={2} padding={2}>
-                {selectedRecipe && <RecipeCard recipe={selectedRecipe} />}
-            </Box>
-        </Box>
+        </>
     );
 };
 

@@ -1,26 +1,21 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Recipe } from "../components/Types";
 import axios from "axios";
-import { useContext } from "react";
-
 
 export const fetchRecipes = createAsyncThunk('recipes/fetch',
     async (_, thunkAPI) => {
         try {
-            console.log('in async thunk');
-            const response = await axios.get('http://localhost:3000/api/recipes')
-            return response.data
-        }
-        catch (e: any) {
-            return thunkAPI.rejectWithValue(e.message)
+            const response = await axios.get('http://localhost:3000/api/recipes');
+            return response.data;
+        } catch (e: any) {
+            return thunkAPI.rejectWithValue(e.response?.status || e.message);
         }
     }
-)
+);
 
 export const addRecipe = createAsyncThunk('recipes/add',
     async (recipe: Recipe, thunkAPI) => {
         try {
-            console.log('in async thunk');
             const response = await axios.post('http://localhost:3000/api/recipes',
                 recipe,
                 {
@@ -28,14 +23,28 @@ export const addRecipe = createAsyncThunk('recipes/add',
                         'user-id': recipe.authorId
                     }
                 }
-            )
-            return response.data
-        }
-        catch (e: any) {
-            return thunkAPI.rejectWithValue(e.message)
+            );
+            return response.data;
+        } catch (e: any) {
+            return thunkAPI.rejectWithValue(e.response?.status || e.message);
         }
     }
-)
+);
+
+export const editRecipe = createAsyncThunk('recipes/edit',
+    async (recipe: Recipe, thunkAPI) => {
+        try {
+            const response = await axios.put(`http://localhost:3000/api/recipes/${recipe.id}`, recipe, {
+                headers: {
+                    'user-id': recipe.authorId
+                }
+            });
+            return response.data;
+        } catch (e: any) {
+            return thunkAPI.rejectWithValue(e.response?.status || e.message);
+        }
+    }
+);
 
 const recipesSlice = createSlice({
     name: 'recipes',
@@ -43,34 +52,37 @@ const recipesSlice = createSlice({
         list: [] as Recipe[],
         loading: true
     },
-    reducers: {
-
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchRecipes.fulfilled,
-                (state, action) => {
-                    console.log('fulfilled');
-                    state.list = action.payload
-                })
-            .addCase(fetchRecipes.rejected,
-                () => {
-                    console.log('failed');
+            .addCase(fetchRecipes.fulfilled, (state, action) => {
+                state.list = action.payload;
+                state.loading = false;
+            })
+            .addCase(fetchRecipes.rejected, () => {
+                
+            })
+            .addCase(addRecipe.fulfilled, (state, action) => {
+                state.list.push(action.payload.recipe);
+            })
+            .addCase(addRecipe.rejected, (_, action) => {
+                if (action.payload === 403) {
+                    alert("You are not allowed to add a recipe");
                 }
-            )
-            .addCase(addRecipe.fulfilled,
-                (state, action) => {
-                    console.log('add: fulfilled');
-                    //state.list.push(action.payload.recipe);
-                    state.list = [...state.list, action.payload.recipe]
-                })
-            .addCase(addRecipe.rejected,
-                () => {
-                    console.log('add: failed');
-                }
-            )
-    }
+            })
 
+            .addCase(editRecipe.fulfilled, (state, action) => {
+                const index = state.list.findIndex(recipe => recipe.id === action.payload.id);
+                if (index !== -1) {
+                    state.list[index] = action.payload; 
+                }
+            })
+            .addCase(editRecipe.rejected, (_, action) => {
+                if (action.payload === 403) {
+                    alert("You are not allowed to edit this recipe");
+                }
+            });
+    }
 });
 
 export default recipesSlice;
