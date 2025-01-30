@@ -22,11 +22,11 @@ const RecipeList = () => {
         dispatch(fetchRecipes());
     }, [dispatch]);
 
-    const handleOpen = () => {
+    const handleOpenAdd = () => {
         setAddRecipe(true);
     };
 
-    const handleClose = () => {
+    const handleCloseAdd = () => {
         setAddRecipe(false);
     };
 
@@ -48,14 +48,14 @@ const RecipeList = () => {
                                 component="a"
                             >
                                 <ReceiptLongIcon sx={{ margin: 0.5 }} />
-                                {r.title}
+                                {r.title} 
                             </ListItemButton>
                         ))}
                     </List>
-                    <Button onClick={handleOpen} variant="contained" color="primary" disabled={!user.id}>
+                    <Button onClick={handleOpenAdd} variant="contained" color="primary" disabled={!user.id}>
                         Add Recipe
                     </Button>
-                    <RecipeForm open={addRecipe} close={handleClose} />
+                    <RecipeForm open={addRecipe} close={handleCloseAdd} />
                 </Box>
                 <Box flex={2} padding={2}>
                     {selectedRecipe && <RecipeCard recipe={selectedRecipe} />}
