@@ -20,4 +20,6 @@ export type Recipe = {
 
 }
 
+export type RecipeFormType=Omit<Recipe,'id'|'authorId'|'img'>
+
 

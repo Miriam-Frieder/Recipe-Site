@@ -3,6 +3,7 @@ import { User } from "./Types";
 import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 import UserContext from "./UserContext";
 import SaveIcon from "@mui/icons-material/Save";
+import { loginBoxStyle } from "./Styles";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 
@@ -39,7 +40,7 @@ const Update = ({ open, close }: { open: boolean; close: Function }) => {
   return (
     <Modal open={open} onClose={() => close()} aria-labelledby="update-modal-title" aria-describedby="update-modal-description">
 
-      <Box component="form" onSubmit={handleSubmit} sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", flexDirection: "column", gap: 2, maxWidth: 400, width: "90%", bgcolor: "background.paper", boxShadow: 24, borderRadius: 2, p: 4 }}>
+      <Box component="form" onSubmit={handleSubmit} sx={loginBoxStyle}>
 
         <Typography variant="h6" component="h1" textAlign="center" id="update-modal-title">Update</Typography>
 

@@ -3,6 +3,7 @@ import { User } from "./Types";
 import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 import UserContext from "./UserContext";
 import { emptyUser } from "./UserContext";
+import { loginBoxStyle } from "./Styles";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 const Login = ({ open,isRegister, close }: { open: boolean,isRegister:boolean, close: Function }) => {
@@ -59,21 +60,7 @@ const Login = ({ open,isRegister, close }: { open: boolean,isRegister:boolean, c
       <Box
         component="form"
         onSubmit={handleSubmit}
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          maxWidth: 400,
-          width: "90%",
-          bgcolor: "background.paper",
-          boxShadow: 24,
-          borderRadius: 2,
-          p: 4,
-        }}
+        sx={loginBoxStyle}
       >
         <Typography variant="h6" component="h1" textAlign="center" id="login-modal-title">
           {isRegister? 'Sign Up' : 'Login'}
